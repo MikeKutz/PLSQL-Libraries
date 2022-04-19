@@ -1,17 +1,17 @@
 create or replace
-type body "Output"
+type body STDOUT_t
 is
 
-    CONSTRUCTOR function "Output"( self in out nocopy "Output" ) return self as result
+    CONSTRUCTOR function STDOUT_t( self in out nocopy STDOUT_t ) return self as result
     as
     begin
         self.clear_buffer;
         self.clear_tab_positions;
         
         return;
-    end "Output";
+    end STDOUT_t;
 
-    member procedure p( self in out nocopy "Output", val number, do_ltrim boolean default false  )
+    member procedure p( self in out nocopy STDOUT_t, val number, do_ltrim boolean default false  )
     as
     begin
         -- ignore for number
@@ -23,13 +23,13 @@ is
         end if;
     end p;
     
-    member procedure p( self in out nocopy "Output", val varchar2, do_ltrim boolean default false  )
+    member procedure p( self in out nocopy STDOUT_t, val varchar2, do_ltrim boolean default false  )
     as
         clean_val varchar2(32767);
     begin
         if do_ltrim
         then
-            clean_val := regexp_replace( val, '^' || teJSON_const.regexp_whitespace );
+            clean_val := regexp_replace( val, '^' || MKLibrary.Constants.regexp_whitespace );
         else
             clean_val := val;
         end if;
@@ -42,13 +42,13 @@ is
         end if;
     end p;
 
-    member procedure p( self in out nocopy "Output", val clob, do_ltrim boolean default false  )
+    member procedure p( self in out nocopy STDOUT_t, val clob, do_ltrim boolean default false  )
     as
         clean_val varchar2(32767);
     begin
         if do_ltrim
         then
-            clean_val := regexp_replace( val, '^' || teJSON_const.regexp_whitespace );
+            clean_val := regexp_replace( val, '^' || MKLibrary.Constants.regexp_whitespace  );
         else
             clean_val := val;
         end if;
@@ -64,17 +64,17 @@ is
 /******************************************************************************
                CLOB STUFF
 *******************************************************************************/
-    member procedure rtrim_whitespace( self in out nocopy "Output" )
+    member procedure rtrim_whitespace( self in out nocopy STDOUT_t )
     as
     begin
         if code_clob.exists(indent_depth)
         then
-            "CLOB Utils".rtrim_whitespace( code_clob( indent_depth ) );
+            CLOB_Utils.rtrim_whitespace( code_clob( indent_depth ) );
         end if;
     end rtrim_whitespace;
 
     /* returns the current column possition of last line of the buffer */
-    member function get_last_line_length( self in out nocopy "Output" ) return int
+    member function get_last_line_length( self in out nocopy STDOUT_t ) return int
     as
     begin
         if  code_clob( indent_depth ) like '%' || chr(10)
@@ -85,7 +85,7 @@ is
         return length( code_clob( indent_depth ) ) - regexp_instr( code_clob( indent_depth ), chr(10) || '[^' || chr(10) || ']*$' );
     end get_last_line_length;
 
-    member function get_code_clob( self in out nocopy "Output" ) return clob
+    member function get_code_clob( self in out nocopy STDOUT_t ) return clob
     as
     begin
         -- fix OOPS if unmatched "start/end_indent"
@@ -107,7 +107,7 @@ is
                GENERATOR INDENTIONS
 *******************************************************************************/
     
-    member procedure start_indent( self in out nocopy "Output" )
+    member procedure start_indent( self in out nocopy STDOUT_t )
     as
     begin
         indent_depth := indent_depth + 1;
@@ -120,7 +120,7 @@ is
         code_clob(indent_depth) := null;
     end start_indent;
     
-    member procedure end_indent( self in out nocopy "Output" )
+    member procedure end_indent( self in out nocopy STDOUT_t )
     as
     begin
         -- indent buffer results
@@ -138,13 +138,13 @@ is
         -- TBD
     end end_indent;
     
-    member procedure start_block_comment( self in out nocopy "Output" )
+    member procedure start_block_comment( self in out nocopy STDOUT_t )
     as
     begin
         start_indent;
     end start_block_comment;
     
-    member procedure end_block_comment( self in out nocopy "Output" )
+    member procedure end_block_comment( self in out nocopy STDOUT_t )
     as
     begin
         -- indent buffer results
@@ -164,14 +164,14 @@ is
 *******************************************************************************/
 
     /* sets current possition as tab #x */
-    member procedure set_tab( self in out nocopy "Output", i int )
+    member procedure set_tab( self in out nocopy STDOUT_t, i int )
     as
     begin
         tab_pos(i) := get_last_line_length;
     end set_tab;
     
     /* spaces to tab #x (or not if overreached) */
-    member procedure goto_tab( self in out nocopy "Output", i int )
+    member procedure goto_tab( self in out nocopy STDOUT_t, i int )
     as
        current_pos int;
     begin
@@ -189,12 +189,12 @@ is
                RESET GLOBALS
 *******************************************************************************/
 
-    member procedure clear_buffer( self in out nocopy "Output" )
+    member procedure clear_buffer( self in out nocopy STDOUT_t )
     as
     begin
         if code_clob is null
         then
-            code_clob := new "CLOB Array"();
+            code_clob := new CLOB_Array();
         else
             code_clob.delete;
         end if;
@@ -202,12 +202,12 @@ is
         code_clob.extend(100);
     end clear_buffer;
     
-    member procedure clear_tab_positions( self in out nocopy "Output" )
+    member procedure clear_tab_positions( self in out nocopy STDOUT_t )
     as
     begin
         if tab_pos is null
         then
-           tab_pos := new "INT Array"();
+           tab_pos := new INT_Array();
         else
             tab_pos.delete;
         end if;
@@ -218,6 +218,6 @@ is
         
         indent_depth := 1;
     end clear_tab_positions;
-end "Output";
+end STDOUT_t;
 /
 

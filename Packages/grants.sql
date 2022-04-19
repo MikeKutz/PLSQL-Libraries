@@ -1,3 +1,3 @@
-grant execute on "MKLibrary Constants" to public;
-grant execute on "CLOB Utils" to public;
-grant execute on "Error Utils" to public;
+grant execute on Constants to public;
+grant execute on CLOB_Utils to public;
+grant execute on Error_Utils to public;

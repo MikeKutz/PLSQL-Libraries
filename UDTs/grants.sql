@@ -1,6 +1,6 @@
-grant execute on "INT Array" to public;
-grant execute on "CLOB Array" to public;
-grant execute on "Output" to public;
-grant execute on "Error" to public;
-grant execute on "Hash" to public;
-grant execute on "Iterator" to public;
+grant execute on INT_Array to public;
+grant execute on CLOB_Array to public;
+grant execute on STDOUT_t to public;
+grant execute on STDERR_t to public;
+grant execute on Hash_t to public;
+grant execute on Iterator_t to public;

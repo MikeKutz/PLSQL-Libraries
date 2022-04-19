@@ -1,43 +1,43 @@
 create or replace
-type body "Error"
+type body STDERR_t
 as
-    constructor function "Error" return self as result
+    constructor function STDERR_t return self as result
     as
     begin
         return;
-    end "Error";
+    end STDERR_t;
     
-    member procedure "error"( self in out nocopy "Error", log_txt clob)
+    member procedure "error"( self in out nocopy STDERR_t, log_txt clob)
     as
     begin
-        "log"."error"( self.stderr, log_txt );
+        MKLibrary.Log_utils."error"( self.stderr, log_txt );
     end "error";
     
-    member procedure "debug"( self in out nocopy "Error", log_txt clob)
+    member procedure "debug"( self in out nocopy STDERR_t, log_txt clob)
     as
     begin
-        "log"."debug"( self.stderr, log_txt );
+         MKLibrary.Log_utils."debug"( self.stderr, log_txt );
     end "debug";
     
-    member procedure "info"( self in out nocopy "Error", log_txt clob)
+    member procedure "info"( self in out nocopy STDERR_t, log_txt clob)
     as
     begin
-        "log"."info"( self.stderr, log_txt );
+         MKLibrary.Log_utils."info"( self.stderr, log_txt );
     end "info";
     
-    member procedure "verbose"( self in out nocopy "Error", log_txt clob)
+    member procedure "verbose"( self in out nocopy STDERR_t, log_txt clob)
     as
     begin
-        "log"."verbose"( self.stderr, log_txt );
+         MKLibrary.Log_utils."verbose"( self.stderr, log_txt );
     end "verbose";
     
-    member procedure "sql_error"( self in out nocopy "Error")
+    member procedure "sql_error"( self in out nocopy STDERR_t)
     as
     begin
-        "log"."sql_error"( self.stderr );
+         MKLibrary.Log_utils."sql_error"( self.stderr );
     end "sql_error";
     
-    member procedure "clear_logs"( self in out nocopy "Error")
+    member procedure "clear_logs"( self in out nocopy STDERR_t)
     as
     begin
         self.stderr := null;
@@ -48,6 +48,6 @@ as
     begin
         return self.stderr;
     end "get_log";
-end log_t;
+end STDERR_t;
 /
 

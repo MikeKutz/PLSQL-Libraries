@@ -1,4 +1,9 @@
+whenever sqlerror exit failure;
+
 -- install script
+@@./admin_grants-for-owner.sql
+
+alter session set current_schema=MKLibrary;
 
 -- Constants and Errors
 @@./Packages/MKLibrary_constants.pks
@@ -17,15 +22,14 @@
 @@./Packages/CLOB_utils.pks
 
 -- install UDT Bodies
-@@./UDTs/Output.pkb
 @@./UDTs/Hash.pkb
 @@./UDTs/Iterator.pkb
 @@./UDTs/Output.pkb
 @@./UDTs/Error.pkb
 
 -- install Package Bodies
-@@./UDTs/Error_utils.pkb
-@@./UDTs/CLOB_utils.pkb
+@@./Packages/Error_utils.pkb
+@@./Packages/CLOB_utils.pkb
 
 -- apply grants for UDT
 -- @@./UDTs/grants.sql

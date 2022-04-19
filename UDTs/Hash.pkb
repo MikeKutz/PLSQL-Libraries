@@ -1,7 +1,7 @@
 create or replace
-type body "Hash"
+type body Hash_t
 as
-    constructor function "Hash" return self as result
+    constructor function Hash_t return self as result
     as
         j json_object_t;
     begin
@@ -10,12 +10,12 @@ as
         self.json_clob := j.to_clob;
         
         return;
-    end "Hash";
+    end Hash_t;
     
     member procedure reset_properties
     as
     begin
-        self := new "Hash"();
+        self := new Hash_t();
     end reset_properties;
     
     member procedure put_value( key_str in varchar2, val_str in varchar2 )
@@ -82,7 +82,7 @@ as
         json_clob := j.to_clob();
     end put_value;
 
-    member procedure put_value( key_str in varchar2, val_hash in out nocopy "Hash" )
+    member procedure put_value( key_str in varchar2, val_hash in out nocopy Hash_t )
     as
         j json_object_t;
         k json_object_t;
@@ -193,11 +193,11 @@ as
         return ret_val;
     end get_date;
     
-    member function  get_hash( key_str in varchar2 ) return "Hash"
+    member function  get_hash( key_str in varchar2 ) return Hash_t
     as
         j json_object_t;
         k json_object_t;
-        ret_val "Hash";
+        ret_val Hash_t;
     begin
         if key_str is null
         then
@@ -209,7 +209,7 @@ as
         j := new json_object_t( json_clob );
         k := j.get_object( key_str );
         
-        ret_val := new "Hash";
+        ret_val := new Hash_t;
         ret_val.json_clob := k.to_clob();
 
         return ret_val;
@@ -231,7 +231,7 @@ as
         return j.has(key_str);
     end key_exists;
 
-    member procedure merge_other( self in out nocopy "Hash", new_hash in out nocopy "Hash", name_prefix in varchar2 default null )
+    member procedure merge_other( self in out nocopy Hash_t, new_hash in out nocopy Hash_t, name_prefix in varchar2 default null )
     as
         j_self  json_object_t;
         j_sub   json_object_t;
@@ -272,5 +272,5 @@ as
         end if;
     end;
 
-end "Hash";
+end Hash_t;
 /

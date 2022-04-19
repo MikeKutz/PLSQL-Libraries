@@ -1,5 +1,5 @@
 create or replace
-package "Error Utils"
+package Log_utils
     authid current_user
 --    accessible by (package teJSON_generator
 --                      ,package "execute"
@@ -9,15 +9,15 @@ as
     /* teJSON logging facility
        all items are appended to a CLOB
     */
-    runtime   "Hash";
+    runtime   MKLibrary.Hash_t;
     
-    procedure "generic"( main_str in out nocopy clob, log_type in "MKLibrary Constants"."Token", log_txt clob);
+    procedure "generic"( main_str in out nocopy clob, log_type in MKLibrary.Constants."Token", log_txt clob);
     procedure "error"( main_str in out nocopy clob, log_txt clob);
     procedure "debug"( main_str in out nocopy clob, log_txt clob);
     procedure "info"( main_str in out nocopy clob, log_txt clob);
     procedure "verbose"( main_str in out nocopy clob, log_txt clob);
     procedure "sql_error"( main_str in out nocopy clob);
-end "Error Utils";
+end Log_utils;
 /
 
     
