@@ -23,12 +23,20 @@ PL/SQL Libraries of various types.
 
 # Security
 
-All Packages and Types are Invoker's Rights and have been granted access to PUBLIC.
+All Packages and Types are Invoker's Rights. All Pacakages and Types have been granted access to PUBLIC.
 
 Public Synonym is (optionally) available by prefixing the object name with `MKL_`
 
 - `MKL_Hash_t`
 - `MKL_STDOUT_t`
 - etc
+
+# Installation
+
+## Easy Installation
+
+For Oracle Cloud Free Tier, run this from SQLPlus/SQLDeveloper/SQLcl command prompt as ADMIN. (This one installs the current version)
+
+`@@https://raw.githubusercontent.com/MikeKutz/PLSQL-Libraries/main/install.sql`
 
 # HASH_t
