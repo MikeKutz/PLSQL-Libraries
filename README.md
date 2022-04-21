@@ -37,6 +37,6 @@ Public Synonym is (optionally) available by prefixing the object name with `MKL_
 
 For Oracle Cloud Free Tier, run this from SQLPlus/SQLDeveloper/SQLcl command prompt as ADMIN. (This one installs the current version)
 
-`@@https://raw.githubusercontent.com/MikeKutz/PLSQL-Libraries/main/install.sql`
+`@@https://raw.githubusercontent.com/MikeKutz/PLSQL-Libraries/main/cloud-install.sql`
 
 # HASH_t
