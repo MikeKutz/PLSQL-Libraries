@@ -3,9 +3,11 @@ type STDOUT_t
     authid current_user
 as object (
     /* SQL Object used by code generating PL/SQL block.
-        Treat as if it is a STDOUT buffer
-        
-        A UDT to allow easy programming of recursive template generator
+    *   Treat as if it is a STDOUT buffer
+    *   
+    *   A UDT to allow easy programming of recursive template generator
+    *   
+    * @headcom
     */
         
     indent_depth   int, -- init := 1;

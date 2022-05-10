@@ -1,5 +1,16 @@
 create or replace
 type Hash_t as object (
+    /**
+    * Hash_t
+    *
+    * A clasic Hash data type implemented as a UDT
+    * It uses JSON data type for storing the collection.
+    *
+    * Current limitations require it to be a CLOB.
+    * This UDT handles all the conversion between CLOB and JSON data types.
+    *
+    * @headcom
+    */
     json_clob      clob,
     constructor function Hash_t return self as result,
     

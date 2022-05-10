@@ -2,7 +2,14 @@ create or replace
 type STDERR_t
     authid current_user
 as object (
+    /**
+    * Cached streaming engine for Logs (STDERR)
+    *
+    * @headcom
+    */
+    
     stderr clob,
+    
     constructor function STDERR_t return self as result,
     member procedure "error"( self in out nocopy STDERR_t, log_txt clob),
     member procedure "debug"( self in out nocopy STDERR_t, log_txt clob),

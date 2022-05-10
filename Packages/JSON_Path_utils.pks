@@ -5,7 +5,13 @@ as
     /*
         JSON Path utils
         
-        JSON Path manipulation utilities
+        Utilities for manipulating a JSON Path
+        
+        `$.` is an absolute path.
+        `@.` these are relative paths
+        `this` and `super` are equivelent to `./` and `../` respectively.
+        
+        `this` & `@.` are synonyms
         
         - ltrim_path -- removes left most level
         - rtrim_path -- removes right most level

@@ -3,6 +3,35 @@ type Iterator_t
     authid current_user
 as object
 (
+    /**
+    * Iterator_t
+    *
+    * Allows PL/SQL code to iterate over a collection of `Hash_t`
+    *
+    * This uses `APEX_JSON` under the hood.
+    *
+    * Input is a `SYS_REFCURSOR`.
+    * `LONG` data types are viewed as Strings.
+    *
+    * declare
+    *   i Iterator_t;
+    *   h Hash_t;
+    *   c sys_refcursor;
+    * begin
+    *   open c for select * from user_tables;
+    *
+    *   i := new Iterator(c);
+    *   while (i.has_more)
+    *   loop
+    *       h := i.pop_row;
+    *       dbms_output.put_line( h.get_string( 'DEFAULT_DATA' );
+    *   end loop;
+    * end;
+    * /
+    * 
+    *
+    * @headcom
+    */
     json_clob  clob,
     i          int,
     max_i      int,
