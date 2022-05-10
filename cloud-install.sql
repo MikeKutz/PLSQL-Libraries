@@ -24,6 +24,7 @@ prompt installing Package Specifications
 @@./Packages/Error_utils.pks
 @@./Packages/CLOB_utils.pks
 @@./Packages/JSON_Path_utils.pks
+@@./Packages/generate_series.pks
 
 -- install UDT Bodies
 prompt installing Type Bodies
@@ -37,6 +38,7 @@ prompt installing Package Bodies
 @@./Packages/Error_utils.pkb
 @@./Packages/CLOB_utils.pkb
 @@./Packages/JSON_Path_utils.pkb
+@@./Packages/generate_series.pkb
 
 -- apply grants
 prompt Applying grants
