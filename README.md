@@ -6,6 +6,7 @@ PL/SQL Libraries of various types.
 - **Constants** - Constants used by this library
 - **CLOB_Utils** - various utilities for sliceing and dicing CLOBs
 - **Log_Utils** - conditional blocks (and formats) logs. (for `STDERR_t`
+- **Generate_Series** - Generate a series of Integers, Days, Months, or Weeks
 
 # SQL Data Types
 
@@ -40,3 +41,42 @@ For Oracle Cloud Free Tier, run this from SQLPlus/SQLDeveloper/SQLcl command pro
 `@@https://raw.githubusercontent.com/MikeKutz/PLSQL-Libraries/main/cloud-install.sql`
 
 # HASH_t
+
+# Generate_Series
+
+Macro name | Description
+-----------|-----------
+`of_numbers` | Generate a series of *n* integers starting with `start_value`
+`of_days` | Generate a series of Days starting with `start_value`
+`of_weeks` | Generate a series of Weeks starting with the week given by `start_value`
+`of_months | Generate a series of Months starting with the week given by `start_value`
+
+Example Usage:
+
+```sql
+with data (dt) as (
+    select to_date( '5-nov-1955', 'dd-mon-yyyy') from dual union all
+    select sysdate from dual
+)
+select d.dt, b.*
+from data d
+    cross join lateral  (
+        select *
+        from generate_series.of_weeks( d.dt, 3 )
+    ) b
+```
+
+Results:
+
+```
+DT        WEEK_STAR WEEK_END  WEEK_PERI     WEEK_N   WEEK_N_0   ISO_WEEK   ISO_YEAR ORACLE_QUARTER
+--------- --------- --------- --------- ---------- ---------- ---------- ---------- --------------
+05-NOV-55 30-OCT-55 05-NOV-55 06-NOV-55          1          0         44       1955              4
+05-NOV-55 06-NOV-55 12-NOV-55 13-NOV-55          2          1         45       1955              4
+05-NOV-55 13-NOV-55 19-NOV-55 20-NOV-55          3          2         46       1955              4
+12-MAY-22 08-MAY-22 14-MAY-22 15-MAY-22          1          0         19       2022              2
+12-MAY-22 15-MAY-22 21-MAY-22 22-MAY-22          2          1         20       2022              2
+12-MAY-22 22-MAY-22 28-MAY-22 29-MAY-22          3          2         21       2022              2
+
+6 rows selected. 
+```

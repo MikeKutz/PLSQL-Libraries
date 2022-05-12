@@ -1,31 +1,4 @@
 create or replace
-package generate_series
-    authid definer
-as
-    /* package of SQL_MACROS for generating series of values
-    *
-    * @headcom
-    */
-    
-    /* Generates a series of integers.
-    *
-    * @param   start_value initial integer
-    * @param   n           The number of row to generate
-    * @return              Series of integers
-    */
-    function of_numbers( start_value in int, n in int ) return varchar2 SQL_MACRO(TABLE);
-
-    /* Generates a series of integers.
-    *
-    * @param   start_value initial date
-    * @param   n           The number of row to generate
-    * @return              Series of integers
-    */
-    function of_dates( start_value in date, n in int ) return varchar2 SQL_MACRO(table);
-end;
-/
-
-create or replace
 package body generate_series
 as
     function of_numbers( start_value in int, n in int ) return varchar2 SQL_MACRO(TABLE)
@@ -36,12 +9,42 @@ as
         connect by level <= of_numbers.n]';
     end;
     
-    function of_dates( start_value in date, n in int ) return varchar2 SQL_MACRO(table)
+    function of_days( start_value in date, n in int ) return varchar2 SQL_MACRO(table)
     as
     begin
-        return q'[select of_dates.start_value + (level - 1)  date_series
+        return q'[select trunc(of_days.start_value) + (level - 1)  day_start
+            ,trunc(of_days.start_value) + (level) - interval '1' second  day_end
+            ,trunc(of_days.start_value) + (level)  day_period_end
+            ,level day_n
+            ,level -1 day_n_0
         from dual
-        connect by level <= of_dates.n]';
+        connect by level <= of_days.n]';
+    end;
+
+    function of_months( start_value in date, n in int ) return varchar2 SQL_MACRO(table)
+    as
+    begin
+        return q'[select add_months( trunc( of_months.start_value, 'month' ), level - 1 )  month_start
+            ,add_months( trunc( of_months.start_value, 'month' ), level ) - 1 month_end
+            ,level month_n
+            ,level -1 month_n_0
+        from dual
+        connect by level <= of_months.n]';
+    end;
+
+    function of_weeks( start_value in date, n in int ) return varchar2 SQL_MACRO(table)
+    as
+    begin
+        return q'[select trunc(of_weeks.start_value) + 1 + (level -1) * 7 - to_number( to_char( trunc(of_weeks.start_value), 'D' ) ) week_start
+                ,trunc(of_weeks.start_value) + 1 + (level -1) * 7 + 6 - to_number( to_char( trunc(of_weeks.start_value), 'D' ) ) week_end
+                ,trunc(of_weeks.start_value) + 1 + (level -1) * 7 + 7 - to_number( to_char( trunc(of_weeks.start_value), 'D' ) ) week_period_end
+                ,level week_n
+                ,level - 1 week_n_0
+                ,to_number( to_char( of_weeks.start_value + (level -1) * 7, 'IW' ) ) iso_week
+                ,to_number( to_char( of_weeks.start_value + (level -1) * 7, 'IYYY' ) ) iso_year
+                ,to_number( to_char( of_weeks.start_value + (level -1) * 7, 'Q' ) ) oracle_quarter
+            from dual
+            connect by level <= of_weeks.n]';
     end;
 end;
 /
