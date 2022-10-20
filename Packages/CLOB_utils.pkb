@@ -40,7 +40,7 @@ as
 
     procedure rtrim_whitespace( main_str in out nocopy clob )
     as
-        ws MKLibrary.Constants."Token" := '[' || chr(10) || chr(13) || '\s]*$';
+        ws MKLibrary.Constants."Token" := '[' || chr(10) || chr(13) || ' ]*$';
     begin
         main_str := regexp_replace( main_str, ws, '');
     end;

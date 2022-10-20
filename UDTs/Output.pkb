@@ -69,7 +69,7 @@ is
     begin
         if code_clob.exists(indent_depth)
         then
-            CLOB_Utils.rtrim_whitespace( code_clob( indent_depth ) );
+            MKLibrary.CLOB_Utils.rtrim_whitespace( code_clob( indent_depth ) );
         end if;
     end rtrim_whitespace;
 
