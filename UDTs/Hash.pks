@@ -18,6 +18,7 @@ type Hash_t as object (
     member procedure merge_other( self in out nocopy Hash_t, new_hash in out nocopy Hash_t, name_prefix in varchar2 default null ),
 
     member function key_exists( key_str in varchar2 ) return boolean,
+    member function get_all_keys return json_key_list,
 
     member procedure put_value( key_str in varchar2, val_str in varchar2 ),
     member procedure put_value( key_str in varchar2, val_str in boolean ),
