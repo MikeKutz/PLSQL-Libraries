@@ -125,6 +125,11 @@ as
     member function  get_string( key_str in varchar2 ) return varchar2
     as
         j json_object_t;
+
+        k              JSON;
+        real_key       varchar2(200);
+        corrected_path varchar2(4000);
+
         ret_val varchar2(4000);
     begin
         if key_str is null
@@ -133,11 +138,35 @@ as
             return null;
         end if;
 
-    
-        j := new json_object_t( json_clob );
-        
-        if j.has(key_str) then
-            ret_val := j.get_string( key_str );
+        if instr( key_str, '.' ) = 0
+        then
+            j := new json_object_t( json_clob );
+            
+            if j.has(key_str) then
+                ret_val := j.get_string( key_str );
+            end if;
+        else
+            k := JSON ( json_clob );
+            
+            -- correct search path
+            corrected_path := key_str;
+            
+            if corrected_path like '@.%'
+            then
+                raise zero_divide;
+            elsif corrected_path not like '$.%'
+            then
+                real_key := '$.' || corrected_path;
+            else
+                real_key := corrected_path;
+            end if;
+            
+            if json_exists( k, real_key ) -- check path
+            then
+                ret_val := json_value( k, real_key );
+            else
+                ret_val := null;
+            end if;
         end if;
     
         return ret_val;
@@ -146,6 +175,11 @@ as
     member function  get_boolean( key_str in varchar2 ) return boolean
     as
         j json_object_t;
+
+        k              JSON;
+        real_key       varchar2(200);
+        corrected_path varchar2(4000);
+
         ret_val boolean;
     begin
         if key_str is null
@@ -167,6 +201,11 @@ as
     member function  get_number( key_str in varchar2 ) return number
     as
         j json_object_t;
+
+        k              JSON;
+        real_key       varchar2(200);
+        corrected_path varchar2(4000);
+
         ret_val number;
     begin
         if key_str is null
@@ -188,6 +227,11 @@ as
     member function  get_date( key_str in varchar2 ) return date
     as
         j json_object_t;
+
+        k              JSON;
+        real_key       varchar2(200);
+        corrected_path varchar2(4000);
+
         ret_val date;
     begin
         if key_str is null

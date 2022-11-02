@@ -94,5 +94,16 @@ as
     */
     function translate_path( this_path in varchar2, current_loc in varchar2 ) return varchar2;
     
+    /* add_dobule_quotes_to_path
+        adds double quotes ('"') to individual path element names IF needed
+        
+        this is needed for `JSON` usage
+    */
+    
+    /* remove_double_quotes_from_path
+        remove double-quotes from individual element
+        
+        this is needed for `json_object_t` usage
+    */
 end JSON_Path_utils;
 /

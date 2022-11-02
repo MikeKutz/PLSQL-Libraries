@@ -5,7 +5,8 @@ is
     CONSTRUCTOR function STDOUT_t( self in out nocopy STDOUT_t ) return self as result
     as
     begin
-        self.clear_buffer;
+        indent_depth := 1;
+        self.clear_buffer; -- sets i=1
         self.clear_tab_positions;
         
         return;
@@ -123,19 +124,25 @@ is
     member procedure end_indent( self in out nocopy STDOUT_t )
     as
     begin
-        -- indent buffer results
-        code_clob( indent_depth ) :=
-            regexp_replace( code_clob( indent_depth ) , '^'
-                            ,'    ', 1, 0, 'm' );
-
-        -- indention level decrement
-        indent_depth := greatest( indent_depth - 1, 1);
-
-        -- append the upper indetion results to the lower one
-        code_clob( indent_depth ) := code_clob( indent_depth ) || code_clob( indent_depth + 1 );
-
-        -- clean upper (do we need to?)
-        -- TBD
+        if code_clob.exists( indent_depth )
+        then
+            -- indent buffer results
+            code_clob( indent_depth ) :=
+                regexp_replace( code_clob( indent_depth ) , '^'
+                                ,'    ', 1, 0, 'm' );
+        end if;
+        
+        if indent_depth > 1
+        then
+            -- indention level decrement
+            indent_depth := greatest( indent_depth - 1, 1);
+    
+            -- append the upper indetion results to the lower one
+            code_clob( indent_depth ) := code_clob( indent_depth ) || code_clob( indent_depth + 1 );
+    
+            -- clean upper (do we need to?)
+            -- TBD
+        end if;
     end end_indent;
     
     member procedure start_block_comment( self in out nocopy STDOUT_t )
@@ -147,16 +154,22 @@ is
     member procedure end_block_comment( self in out nocopy STDOUT_t )
     as
     begin
-        -- indent buffer results
-        code_clob( indent_depth ) :=
-            regexp_replace( code_clob( indent_depth ) , '^'
-                            ,'* ', 1, 0, 'm' );
-
-        -- indention level decrement
-        indent_depth := greatest( indent_depth - 1, 1);
-
-        -- append the upper indetion results to the lower one
-        code_clob( indent_depth ) := code_clob( indent_depth ) || '/**' || code_clob( indent_depth + 1 ) || '**/';
+        if code_clob.exists( indent_depth )
+        then
+            -- indent buffer results
+            code_clob( indent_depth ) :=
+                regexp_replace( code_clob( indent_depth ) , '^'
+                                ,'* ', 1, 0, 'm' );
+        end if;
+        
+        if indent_depth > 1
+        then
+            -- indention level decrement
+            indent_depth := greatest( indent_depth - 1, 1);
+    
+            -- append the upper indetion results to the lower one
+            code_clob( indent_depth ) := code_clob( indent_depth ) || '/**' || code_clob( indent_depth + 1 ) || '**/';
+        end if;
     end end_block_comment;
 
 /******************************************************************************
@@ -167,6 +180,8 @@ is
     member procedure set_tab( self in out nocopy STDOUT_t, i int )
     as
     begin
+        if i < 1 then return; end if;
+        
         tab_pos(i) := get_last_line_length;
     end set_tab;
     
@@ -175,6 +190,8 @@ is
     as
        current_pos int;
     begin
+        if i < 1 then return; end if;
+
         current_pos := get_last_line_length;
         if tab_pos.exists(i)
         then
@@ -192,6 +209,9 @@ is
     member procedure clear_buffer( self in out nocopy STDOUT_t )
     as
     begin
+        clear_tab_positions;
+        indent_depth := 1;
+        
         if code_clob is null
         then
             code_clob := new CLOB_Array();
@@ -216,7 +236,6 @@ is
         tab_pos(1) := 1;
         tab_pos.extend(100 - 1, 1);
         
-        indent_depth := 1;
     end clear_tab_positions;
 end STDOUT_t;
 /
