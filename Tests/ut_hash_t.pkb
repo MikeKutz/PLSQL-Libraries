@@ -11,6 +11,7 @@ as
         expected  varchar2(200) := 'world';
         key_str   varchar2(200) := 'hello';
         p         MKLibrary.Hash_t;
+        bool      boolean;
     begin
         p := new MKLibrary.Hash_t();
         
@@ -18,6 +19,10 @@ as
         actual := p.get_string( key_str );
         
         ut.expect(actual).to_equal(expected);
+        ------ exists
+        ut.expect( p.key_exists( key_str ) ).to_equal( true );
+        ut.expect( p.key_exists( 'not' ) ).to_equal( false );
+        
     end test_simple;
     
     --%test( Set and Fetch Multiple )

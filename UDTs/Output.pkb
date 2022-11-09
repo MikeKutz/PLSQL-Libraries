@@ -78,11 +78,21 @@ is
     member function get_last_line_length( self in out nocopy STDOUT_t ) return int
     as
     begin
+        -- if there are no \n => use current length
+        if instr( code_clob( indent_depth ), chr(10) ) = 0
+        then
+            return length( code_clob( indent_depth ) );
+        end if;
+        
+        -- this should probably be RETURN 1
+        -- may not calculate correctly with regexp method
         if  code_clob( indent_depth ) like '%' || chr(10)
         then
             return 0;
         end if;
 
+        -- current cursor column = Total Length - Posistion of last \n
+        -- regexp = '\n[^\n]*$'
         return length( code_clob( indent_depth ) ) - regexp_instr( code_clob( indent_depth ), chr(10) || '[^' || chr(10) || ']*$' );
     end get_last_line_length;
 
@@ -209,7 +219,7 @@ is
     member procedure clear_buffer( self in out nocopy STDOUT_t )
     as
     begin
-        clear_tab_positions;
+--        clear_tab_positions;
         indent_depth := 1;
         
         if code_clob is null
