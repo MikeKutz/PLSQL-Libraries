@@ -11,10 +11,12 @@ as object (
     */
         
     indent_depth   int, -- init := 1;
-    code_clob      CLOB_Array,
+    output_clob      CLOB_Array,
     tab_pos        INT_Array,
     
     constructor function STDOUT_t( self in out nocopy STDOUT_t )  return self as result,
+    
+    member procedure merge_other( self in out nocopy STDOUT_t, other_obj in out nocopy STDOUT_t ),
     
     /* txt >> STDOUT */
     member procedure p( self in out nocopy STDOUT_t, val in number, do_ltrim in boolean default false),
@@ -38,7 +40,9 @@ as object (
 
     /* returns the current column possition of last line of the buffer */
     member function get_last_line_length( self in out nocopy STDOUT_t ) return int,
-
+    
+    /* returns the number of lines in the buffer */
+    member function get_line_count( self in out nocopy STDOUT_t ) return int,
     
     /* sets current possition as tab #x */
     member procedure set_tab( self in out nocopy STDOUT_t, i int ),
@@ -55,6 +59,6 @@ as object (
     /* returns STDOUT
         calls `end_indent` as needed
     */
-    member function get_code_clob( self in out nocopy STDOUT_t ) return clob
+    member function get_output_clob( self in out nocopy STDOUT_t ) return clob
 );
 /

@@ -8,15 +8,24 @@ as object (
     * @headcom
     */
     
-    stderr clob,
+    stderr    clob,
+    log_level varchar2(50), -- [on]/debug/verbose/off
     
     constructor function STDERR_t return self as result,
+
+    member procedure set_on,
+    member procedure set_off,
+    member procedure set_debug,
+    member procedure set_verbose,
+
     member procedure "error"( self in out nocopy STDERR_t, log_txt clob),
     member procedure "debug"( self in out nocopy STDERR_t, log_txt clob),
     member procedure "info"( self in out nocopy STDERR_t, log_txt clob),
     member procedure "verbose"( self in out nocopy STDERR_t, log_txt clob),
     member procedure "sql_error"( self in out nocopy STDERR_t),
     member procedure "clear_logs"( self in out nocopy STDERR_t),
-    member function "get_log" return clob
+
+    member function "get_log" return clob,
+    member procedure merge_other( self in out nocopy STDERR_t, other_obj in out nocopy STDERR_T )
 );
 /

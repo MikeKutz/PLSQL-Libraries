@@ -17,19 +17,15 @@ as
     begin
         self := new Hash_t();
     end reset_properties;
---    member function get_all_keys return json_key_list
---    as
---        j json_object_t;
---    begin
---        if key_str is null
---        then
---            -- log.verbose( 'Attempting to set NULL Key' );
---            return;
---        end if;
---        j := new json_object_t( json_clob );
---
---        return j.get_keys();        
---    end get_all_keys;
+
+    member function get_all_keys return json_key_list
+    as
+        j json_object_t;
+    begin
+        j := new json_object_t( json_clob );
+
+        return j.get_keys();        
+    end get_all_keys;
     
     member procedure put_value( key_str in varchar2, val_str in varchar2 )
     as

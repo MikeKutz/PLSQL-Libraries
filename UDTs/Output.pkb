@@ -12,15 +12,21 @@ is
         return;
     end STDOUT_t;
 
+    member procedure merge_other( self in out nocopy STDOUT_t, other_obj in out nocopy STDOUT_t )
+    as
+    begin
+        self.p( other_obj.get_output_clob() );
+    end merge_other;
+
     member procedure p( self in out nocopy STDOUT_t, val number, do_ltrim boolean default false  )
     as
     begin
         -- ignore for number
-        if code_clob.exists( indent_depth )
+        if output_clob.exists( indent_depth )
         then
-            code_clob( indent_depth )  := code_clob( indent_depth ) || to_char( val );
+            output_clob( indent_depth )  := output_clob( indent_depth ) || to_char( val );
         else
-            code_clob(indent_depth ) := to_char( val );
+            output_clob(indent_depth ) := to_char( val );
         end if;
     end p;
     
@@ -35,11 +41,11 @@ is
             clean_val := val;
         end if;
         
-        if code_clob.exists( indent_depth )
+        if output_clob.exists( indent_depth )
         then
-            code_clob( indent_depth )  := code_clob( indent_depth ) || clean_val;
+            output_clob( indent_depth )  := output_clob( indent_depth ) || clean_val;
         else
-            code_clob(indent_depth ) :=  clean_val ;
+            output_clob(indent_depth ) :=  clean_val ;
         end if;
     end p;
 
@@ -54,11 +60,11 @@ is
             clean_val := val;
         end if;
 
-        if code_clob.exists( indent_depth )
+        if output_clob.exists( indent_depth )
         then
-            code_clob( indent_depth )  := code_clob( indent_depth ) || clean_val;
+            output_clob( indent_depth )  := output_clob( indent_depth ) || clean_val;
         else
-            code_clob(indent_depth ) :=  clean_val ;
+            output_clob(indent_depth ) :=  clean_val ;
         end if;
     end p;
 
@@ -68,9 +74,9 @@ is
     member procedure rtrim_whitespace( self in out nocopy STDOUT_t )
     as
     begin
-        if code_clob.exists(indent_depth)
+        if output_clob.exists(indent_depth)
         then
-            MKLibrary.CLOB_Utils.rtrim_whitespace( code_clob( indent_depth ) );
+            MKLibrary.CLOB_Utils.rtrim_whitespace( output_clob( indent_depth ) );
         end if;
     end rtrim_whitespace;
 
@@ -79,24 +85,37 @@ is
     as
     begin
         -- if there are no \n => use current length
-        if instr( code_clob( indent_depth ), chr(10) ) = 0
+        if instr( output_clob( indent_depth ), chr(10) ) = 0
         then
-            return length( code_clob( indent_depth ) );
+            return length( output_clob( indent_depth ) );
         end if;
         
         -- this should probably be RETURN 1
         -- may not calculate correctly with regexp method
-        if  code_clob( indent_depth ) like '%' || chr(10)
+        if  output_clob( indent_depth ) like '%' || chr(10)
         then
             return 0;
         end if;
 
         -- current cursor column = Total Length - Posistion of last \n
         -- regexp = '\n[^\n]*$'
-        return length( code_clob( indent_depth ) ) - regexp_instr( code_clob( indent_depth ), chr(10) || '[^' || chr(10) || ']*$' );
+        return length( output_clob( indent_depth ) ) - regexp_instr( output_clob( indent_depth ), chr(10) || '[^' || chr(10) || ']*$' );
     end get_last_line_length;
+    
+    member function get_line_count( self in out nocopy STDOUT_t ) return int
+    as
+        total int := 0;
+    begin
+        -- count number of \n in 
+        for i in 1 .. indent_depth
+        loop
+            total := total + regexp_count( output_clob( i ), chr(10) );
+        end loop;
+        
+        return total;
+    end get_line_count;
 
-    member function get_code_clob( self in out nocopy STDOUT_t ) return clob
+    member function get_output_clob( self in out nocopy STDOUT_t ) return clob
     as
     begin
         -- fix OOPS if unmatched "start/end_indent"
@@ -105,13 +124,13 @@ is
             end_indent;
         end loop;
         
-        if not code_clob.exists(1)
+        if not output_clob.exists(1)
         then
             return null;
         end if;
         
-        return code_clob(1);
-    end get_code_clob;
+        return output_clob(1);
+    end get_output_clob;
 
 
 /******************************************************************************
@@ -128,17 +147,17 @@ is
             raise_application_error( -20005, 'To many indentions' );
         end if;
         
-        code_clob(indent_depth) := null;
+        output_clob(indent_depth) := null;
     end start_indent;
     
     member procedure end_indent( self in out nocopy STDOUT_t )
     as
     begin
-        if code_clob.exists( indent_depth )
+        if output_clob.exists( indent_depth )
         then
             -- indent buffer results
-            code_clob( indent_depth ) :=
-                regexp_replace( code_clob( indent_depth ) , '^'
+            output_clob( indent_depth ) :=
+                regexp_replace( output_clob( indent_depth ) , '^'
                                 ,'    ', 1, 0, 'm' );
         end if;
         
@@ -148,7 +167,7 @@ is
             indent_depth := greatest( indent_depth - 1, 1);
     
             -- append the upper indetion results to the lower one
-            code_clob( indent_depth ) := code_clob( indent_depth ) || code_clob( indent_depth + 1 );
+            output_clob( indent_depth ) := output_clob( indent_depth ) || output_clob( indent_depth + 1 );
     
             -- clean upper (do we need to?)
             -- TBD
@@ -164,11 +183,11 @@ is
     member procedure end_block_comment( self in out nocopy STDOUT_t )
     as
     begin
-        if code_clob.exists( indent_depth )
+        if output_clob.exists( indent_depth )
         then
             -- indent buffer results
-            code_clob( indent_depth ) :=
-                regexp_replace( code_clob( indent_depth ) , '^'
+            output_clob( indent_depth ) :=
+                regexp_replace( output_clob( indent_depth ) , '^'
                                 ,'* ', 1, 0, 'm' );
         end if;
         
@@ -178,7 +197,7 @@ is
             indent_depth := greatest( indent_depth - 1, 1);
     
             -- append the upper indetion results to the lower one
-            code_clob( indent_depth ) := code_clob( indent_depth ) || '/**' || code_clob( indent_depth + 1 ) || '**/';
+            output_clob( indent_depth ) := output_clob( indent_depth ) || '/**' || output_clob( indent_depth + 1 ) || '**/';
         end if;
     end end_block_comment;
 
@@ -222,14 +241,14 @@ is
 --        clear_tab_positions;
         indent_depth := 1;
         
-        if code_clob is null
+        if output_clob is null
         then
-            code_clob := new CLOB_Array();
+            output_clob := new CLOB_Array();
         else
-            code_clob.delete;
+            output_clob.delete;
         end if;
 
-        code_clob.extend(100);
+        output_clob.extend(100);
     end clear_buffer;
     
     member procedure clear_tab_positions( self in out nocopy STDOUT_t )
