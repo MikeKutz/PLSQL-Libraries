@@ -5,6 +5,7 @@ as
     as
     begin
         self.log_level := MKLibrary.Constants.log_level_on;
+        self.temporary_trace := false;
         return;
     end STDERR_t;
     
@@ -12,6 +13,7 @@ as
     as
     begin
         if log_level != MKLibrary.Constants.log_level_off
+          or temporary_trace
         then
             MKLibrary.Log_utils."error"( self.stderr, log_txt );
         end if;
@@ -21,6 +23,7 @@ as
     as
     begin
         if log_level in ( MKLibrary.Constants.log_level_verbose, MKLibrary.Constants.log_level_debug )
+          or temporary_trace
         then
             MKLibrary.Log_utils."debug"( self.stderr, log_txt );
          end if;
@@ -30,6 +33,7 @@ as
     as
     begin
         if log_level != MKLibrary.Constants.log_level_off
+          or temporary_trace
         then
             MKLibrary.Log_utils."info"( self.stderr, log_txt );
          end if;
@@ -39,6 +43,7 @@ as
     as
     begin
         if log_level = MKLibrary.Constants.log_level_verbose
+          or temporary_trace
         then
             MKLibrary.Log_utils."verbose"( self.stderr, log_txt );
         end if;
@@ -74,9 +79,17 @@ as
         self.log_level := Constants.log_level_verbose;
     end set_verbose;
     
-
-
-
+    member procedure set_trace_on
+    as
+    begin
+        self.temporary_trace := true;
+    end set_trace_on;
+    
+    member procedure set_trace_off
+    as
+    begin
+        self.temporary_trace := false;
+    end set_trace_off;
     
     member procedure "clear_logs"( self in out nocopy STDERR_t)
     as

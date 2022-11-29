@@ -8,8 +8,9 @@ as object (
     * @headcom
     */
     
-    stderr    clob,
-    log_level varchar2(50), -- [on]/debug/verbose/off
+    stderr         clob,
+    log_level      varchar2(50), -- [on]/debug/verbose/off
+    temporary_trace boolean, -- true == ON
     
     constructor function STDERR_t return self as result,
 
@@ -17,6 +18,9 @@ as object (
     member procedure set_off,
     member procedure set_debug,
     member procedure set_verbose,
+    
+    member procedure set_trace_on,
+    member procedure set_trace_off,
 
     member procedure "error"( self in out nocopy STDERR_t, log_txt clob),
     member procedure "debug"( self in out nocopy STDERR_t, log_txt clob),
@@ -27,5 +31,5 @@ as object (
 
     member function "get_log" return clob,
     member procedure merge_other( self in out nocopy STDERR_t, other_obj in out nocopy STDERR_T )
-);
+) NOT PERSISTABLE;
 /
