@@ -17,6 +17,13 @@ PL/SQL Libraries of various types.
 - **INT_array** - `VARRAY` of Integers for `STDOUT_t`
 - **CLOB_array** - `VARRAY` of CLOBs for `STDOUT_t`
 
+# Domains (23c+)
+
+- validators for various string/date/number/intervals formats
+- various static value validators
+  - number is integer, above 0/1
+  - date is day/month/year
+  - string is not null and/or trimmed and/or ( upper or lower )
 
 # UT Packages
 
