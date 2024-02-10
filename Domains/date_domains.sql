@@ -20,8 +20,14 @@ create domain if not exists date_my as varchar2(100)
 create domain if not exists date_y as varchar2(100)
     check ( regexp_like( date_y, '^[[:digit:]]{4}$'));
 
-
-
-
-
-
+create flexible domain date_validate ( val )
+        choose domain using ( p_type varchar2(10) ) from
+        case lower(p_type)
+            when 'oracle' then date_oracle(val)
+            when 'us' then date_us(val)
+            when 'eu' then date_eu(val)
+            when 'iso' then date_iso(val)
+            when 'year' then date_y(val)
+            when 'my' then date_my(val)
+        end;
+        
