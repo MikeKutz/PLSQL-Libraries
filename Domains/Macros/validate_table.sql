@@ -37,6 +37,15 @@ as
                                         else 'unkown error'
                                     end validation_error
                                     from dual where column_name=ltrim(rtrim( '#column#' ,'"'), '"')]';
+
+    procedure log_debug( txt in clob )
+    as
+    BEGIN
+        if nvl(do_debug,0) != 0
+        THEN
+            dbms_output.put_line( txt );
+        end if;
+    end;    
 BEGIN
     <<input_validation>>
     begin
@@ -50,7 +59,7 @@ BEGIN
         else str_n := string_validate.count;
         end if;
 
-        if str_n != col_n then raise no_data_found; end if;
+        if str_n != col_n then raise_application_error( -20101, 'columns:domains must be 1:1'); end if;
     end;
 
     <<column_validations>>
@@ -78,7 +87,8 @@ BEGIN
             then
                 not_vc2_columns.extend(1);
                 not_vc2_columns( not_vc2_columns.last ) := rec.description.name;
-                -- dbms_output.PUT_LINE( 'NOT VC2 "' || rec.description.name || '"');
+
+                log_debug( 'NOT VC2 "' || rec.description.name || '"');
             end if;
         end loop;
     end;
@@ -120,10 +130,9 @@ BEGIN
             end if;
         end loop;
 
-        -- dbms_output.PUT_LINE( 'tab  = [' || source_table || ']');
-        -- dbms_output.put_line( 'cols = "' || unpivot_columns || '"');
-        -- dbms_output.put_line( 'doms = "' || domain_test || '"');
-        -- dbms_output.put_line( 'hello world');
+        log_debug( 'tab  = [' || source_table.ptf_name || ']' );
+        log_debug( 'cols = [' || unpivot_columns || ']');
+        log_debug( 'doms = [' || domain_test || ']');
 
 
          final_sql :=  q'[select *
@@ -151,7 +160,7 @@ domain_test || q'[
     if do_debug = 0 then
         return final_sql;
     else
-        dbms_output.put_line( 'sql =' || chr(10) || final_sql);
+        log_debug( 'sql =' || chr(10) || final_sql);
 
         return 'select ' || col_n || ' array_count';
     end if;
