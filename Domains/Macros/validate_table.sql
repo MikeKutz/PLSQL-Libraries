@@ -6,6 +6,56 @@ function validate_table (source_table     dbms_tf.table_t
                         ) return CLOB
     sql_macro(table)
 as
+    /**
+        This `sql_macro` applies the specified `domain` to the corrisponding column and returns only unique results of the form:
+            column_name
+            column_value
+            domain_name
+            error_text - why it failed
+
+        `error_text` values | reason
+        --------------------|------
+        string is not null | value is null and domain has a `not null` requirement
+        string is too long | domain has a `strict` requirement and the value is longer than the specified string length
+        check failed | string failed any `check` constraint of the domain
+        null | string passes all constraints defined by the domain
+        unknown | something went wrong. please file an issue in GitHub
+
+        `column_name` & `string_validate` arrarys must be of the same size.
+
+        the same column can be mentioned multiple times but should be tested agains a different `domain` for each reference.
+
+        ## sample domain
+        `create domain test_domain as varchar2(10) strict not null check ( .. );`
+
+        ## example
+        ```sql
+        select *
+        from validate_table( some_ext_tab
+                            ,columns( c001, c002, c003, c003)
+                            ,columns( string_ntu, ds_interval_units, date_us, string_nt)
+                            );
+        ```
+
+        - domain 'string_ntu' tests column `c001`
+        - domain 'ds_interval_units' tests column `c002`
+        - domain 'date_us' tests column `c003`
+        - domain 'string_nt' tests column `c003`
+
+        #TODO
+        Right now, `dbms_tf` does not support `domain` objects. The workaround is to use `dbms_tf.columns_t`
+
+        As such, the domain needs to be accessible without a schema reference.
+        
+        This limitation is expected to be fixed in a future version of the RDBMS.
+
+
+
+        @param source_table validate values in this table
+        @param column_names list of columns to be validate. can be duplicated
+        @param string_validate name of a scalar varchar2 Domain to apply against corrisponding column_name. must be 1:1
+        @param do_debug non-zero value puts code in Debug mod
+    */
     type domains_nt is table of ALL_DOMAIN_COLS.domain_name%type;
 
     selected_columns clob;
