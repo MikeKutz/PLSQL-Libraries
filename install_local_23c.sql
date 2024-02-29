@@ -3,11 +3,15 @@ whenever sqlerror exit failure;
 -- install script
 prompt Creating User MKLibrary and applying grant
 set define on
-@@./common_create_user.sql DATA TEMP
+@@./common_create_user.sql USERS TEMP
 @@./common_user_grants.sql
+@@./Domains/grants.sql
 set define off
 
 alter session set current_schema=MKLibrary;
+
+prompt defining Domains
+@@./Domains/install.sql
 
 -- Constants and Errors
 prompt defining Constants
@@ -49,6 +53,10 @@ prompt installing Package Bodies
 prompt Applying grants
 @@./UDTs/grants.sql
 @@./Packages/grants.sql
+grant execute any procedure,
+        execute any type,
+        execute any DOMAIN
+    on schema MKLibrary to public;
 
 -- create public synonyms
 prompt Installing Synonyms
@@ -62,5 +70,8 @@ prompt Installing UT Packages
 @@./Tests/ut_logging.pkb
 @@./Tests/ut_path_manipulation.pks
 @@./Tests/ut_path_manipulation.pkb
+@@./Tests/ut_Iterator_util.pks
+@@./Tests/ut_Iterator_util.pkb
+
 
 -- run UTs

@@ -36,7 +36,8 @@ create flexible domain date_validate ( val )
             when 'iso' then date_iso(val)
             when 'year' then date_y(val)
             when 'my' then date_my(val)
-        end
-    ANNOTATIONS ( description 'validates string is a specific format',
-                    options 'oracle us eu iso year my' );
+        end;
+--    annotations not supported for Flexible Domains (23.3 FREE)
+--    ANNOTATIONS ( description 'validates string is a specific format'
+--                    options 'oracle us eu iso year my' options 'oracle us eu iso year my' );
         

@@ -28,9 +28,10 @@ create flexible domain dsinterval_validate ( val )
     case lower(p_type)
         when 'ds_colon' then dsinterval_colon(val)
         when 'ds_units' then dsinterval_units(val)
-    end
-    ANNOTATIONS ( description 'validates string is in the specified option format',
-                  options 'ds_colon ds_units' );
+    end;
+--    annotations not supported for Flexible Domains (23.3 FREE)
+--    ANNOTATIONS ( description 'validates string is in the specified option format',
+--                  options 'ds_colon ds_units' );
 
 
 create flexible domain yminterval_validate ( val )
@@ -39,5 +40,6 @@ create flexible domain yminterval_validate ( val )
         when 'ym_colon' then yminterval_colon(val)
         when 'ym_units' then yminterval_units(val)
     end;
-    ANNOTATIONS ( description 'validates string is in the specified option format',
-                  options 'ym_colon ym_units' );
+--    annotations not supported for Flexible Domains (23.3 FREE)
+--    ANNOTATIONS ( description 'validates string is in the specified option format',
+--                  options 'ym_colon ym_units' );

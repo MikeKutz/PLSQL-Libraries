@@ -8,10 +8,10 @@ function validate_table (source_table     dbms_tf.table_t
 as
     /**
         This `sql_macro` applies the specified `domain` to the corrisponding column and returns only unique results of the form:
-            column_name
-            column_value
-            domain_name
-            error_text - why it failed
+        - column_name
+        - column_value
+        - domain_name
+        - error_text - why it failed
 
         `error_text` values | reason
         --------------------|------

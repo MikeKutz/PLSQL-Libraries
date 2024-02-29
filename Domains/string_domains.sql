@@ -29,15 +29,15 @@ create domain if not exists string_tu as varchar2(32767)
     ANNOTATIONS ( description 'validates string is trimmed uppercase' );
 
 create domain if not exists string_tl as varchar2(32767)
-    check ( string_tl = trim(lower( string_tl)));
+    check ( string_tl = trim(lower( string_tl)))
     ANNOTATIONS ( description 'validates string is trimmed lowercase' );
 
 create domain if not exists string_u as varchar2(32767)
-    check ( string_u = upper( string_u));
+    check ( string_u = upper( string_u))
     ANNOTATIONS ( description 'validates string is uppercase' );
 
 create domain if not exists string_l as varchar2(32767)
-    check ( string_l = lower( string_l));
+    check ( string_l = lower( string_l))
     ANNOTATIONS ( description 'validates string is lowercase' );
 
 create domain if not exists string_t as varchar2(32767)
@@ -98,10 +98,11 @@ create flexible domain string_validate ( val )
             and is_trimmed is false
             and lower(upper_lower) in ('lower', 'l')
           then string_l(val)
-    end
-    ANNOTATIONS ( description 'validates string fits the required format requirement',
-                  parameter_1_description 'is the string NOT NULL?',
-                  parameter_2_description 'is the string trimmed?',
-                  parameter_3_desicription 'is the string uppercase or lowercase',
-                  parameter_3_options 'upper=uppercase lower=lowercase null=not tested' );
+    end;
+ --    annotations not supported for Flexible Domains (23.3 FREE)
+--   ANNOTATIONS ( description 'validates string fits the required format requirement',
+--                  parameter_1_description 'is the string NOT NULL?',
+--                  parameter_2_description 'is the string trimmed?',
+--                  parameter_3_desicription 'is the string uppercase or lowercase',
+--                  parameter_3_options 'upper=uppercase lower=lowercase null=not tested' );
         
