@@ -20,7 +20,7 @@ prompt defining Constants
 -- install UDT Specs
 prompt installing Type Specifications
 @@./UDTs/CLOB_array.pks
-@@./UDTs/INT_array.pks
+@@./UDTs/INT_Array.pks
 @@./UDTs/Hash.pks
 @@./UDTs/Iterator.pks
 @@./UDTs/Output.pks
