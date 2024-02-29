@@ -262,7 +262,7 @@ as
         j := new json_object_t( json_clob );
         k := j.get_object( key_str );
         
-        ret_val := new Hash_t;
+        ret_val := new Hash_t();
         ret_val.json_clob := k.to_clob();
 
         return ret_val;
