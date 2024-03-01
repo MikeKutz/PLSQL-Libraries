@@ -35,6 +35,24 @@ as
         return;
     end Iterator_t;
 
+    constructor function Iterator_t( h Hash_t, k varchar2 ) return self as result
+    as
+    BEGIN
+        self := MKLibrary.Iterator_util.Hash_array_to_Iterator( h, k );
+        
+        return;
+    end;
+
+    /* assertion of underlying JSON */
+    member procedure assert
+    as
+    begin
+        /*
+          pull JSON schema from Iterator_util package
+          and/or use a Domain
+        */
+        null;
+    end assert;
     
     member procedure init_new
     as

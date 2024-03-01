@@ -26,6 +26,13 @@ as
   --%disabled( should not be logically possible)
   PROCEDURE empty_not_object_or_array;
 
+  --%test( TYPE - Objects )
+  PROCEDURE type_object;
+
+  --%test( TYPE interface - Strings )
+  PROCEDURE type_string;
+
+
   --%beforeall
   procedure init_pkg;
 

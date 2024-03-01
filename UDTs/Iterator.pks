@@ -39,6 +39,16 @@ as object
     constructor function Iterator_t return self as result,
     constructor function Iterator_t( c in out nocopy sys_refcursor) return self as result,
 
+    /* key `k` must point to an array
+     *
+     * If the array elements are Objects, each iteration is the Hash_t of a single element
+     * If the array elements are Strings, each iteration is a Hash_t with key as 'valuew' -- may need to be VALUE
+     */
+    constructor function Iterator_t( h Hash_t, k varchar2 ) return self as result,
+
+    /* assertion of underlying JSON */
+    member procedure assert,
+
     /* initialize outside of Constructor Functions */
     member procedure init_new,
     

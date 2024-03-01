@@ -45,18 +45,54 @@ Public Synonym is (optionally) available by prefixing the object name with `MKL_
 
 For Oracle Cloud Free Tier, run this from SQLPlus/SQLDeveloper/SQLcl command prompt as ADMIN. (This one installs the current version)
 
+### OCI Cloud Installation
+
 `@@https://raw.githubusercontent.com/MikeKutz/PLSQL-Libraries/main/cloud-install.sql`
 
-# HASH_t
+### Local 23c Free
 
-# Generate_Series
+`@@https://raw.githubusercontent.com/MikeKutz/PLSQL-Libraries/main/install_local_23c.sql`
+
+# TYPES
+
+## Hash_t
+
+Persist hash-like data. (Associative Array in PL/SQL)
+
+*TBD*
+
+## Iterator_t
+
+Iterate over a `sys_refcursor` (from a function) or a JSON Array (in a `Hash_t` format)
+
+*TBD*
+
+## STDOUT_t
+
+Cache `print()` statements similar to `dbms_output`.  But, adds block indention and tab-stops.
+
+*TBD*
+
+## STDERR_t
+
+Logging-like utility based on `STDOUT_t`.
+
+*TBD*
+
+# PACKAGES
+
+## JSON_Path_utils
+
+*TBD*
+
+## Generate_Series
 
 Macro name | Description
 -----------|-----------
 `of_numbers` | Generate a series of *n* integers starting with `start_value`
 `of_days` | Generate a series of Days starting with `start_value`
 `of_weeks` | Generate a series of Weeks starting with the week given by `start_value`
-`of_months | Generate a series of Months starting with the week given by `start_value`
+`of_months` | Generate a series of Months starting with the week given by `start_value`
 
 Example Usage:
 
