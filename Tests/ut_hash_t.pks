@@ -28,6 +28,9 @@ as
     
     --%test( Testing Setting NULL keys )
     procedure test_null;
+
+    --%test( Testing retirivial of arrays )
+    procedure test_array;
     
 end ut_hash_t;
 /

@@ -1,5 +1,5 @@
 create or replace
-type Hash_t as object (
+type Hash_t force as object (
     /**
     * Hash_t
     *
@@ -30,6 +30,7 @@ type Hash_t as object (
     member function  get_boolean( key_str in varchar2 ) return boolean,
     member function  get_number( key_str in varchar2 ) return number,
     member function  get_date( key_str in varchar2 ) return date,
-    member function  get_hash( key_str in varchar2 ) return Hash_t
+    member function  get_hash( key_str in varchar2 ) return Hash_t,
+    member function  get_array( key_str in varchar2 ) return json_array_t
 );
 /

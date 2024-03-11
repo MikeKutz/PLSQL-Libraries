@@ -267,6 +267,64 @@ as
 
         return ret_val;
     end get_hash;
+    
+    member function  get_array( key_str in varchar2 ) return json_array_t
+    as
+        j json_object_t;
+        k json_object_t;
+        ret_val json_array_t;
+        current_key varchar2(1000);
+        current_path varchar2(1000);
+        final_key varchar2(1000);
+    begin
+        if key_str is null
+        then
+            -- log.verbose( 'Fetching NULL Key' );
+            return null;
+        end if;
+        
+        j := new json_object_t( json_clob );
+
+        if key_str not like '%.%'
+        then    
+          final_key := key_str;
+        else
+          current_path := key_str;
+
+          <<find_last>>
+          LOOP
+            current_key := MKLibrary.JSON_Path_utils.lpop_path( current_path );
+            -- dbms_output.put_line( 'Hash - start key "' || current_key || '"' );
+
+            if j.get_type( current_key ) = 'OBJECT'
+            then
+              j := j.get_object( current_key );
+            else
+              exit find_last;
+            end if;
+
+            current_path := MKLibrary.JSON_Path_utils.ltrim_path( key_str );
+          end loop find_last;
+
+          final_key := current_key;
+        end if;
+        
+
+        <<assert_return>>
+        if j.get_type( final_key ) = 'ARRAY'
+        then
+            -- dbms_output.put_line( 'Fond an ARRAY');
+          ret_val := j.get_array( final_key );
+        else
+            -- dbms_output.put_line( 'no ARRAY :(');
+          ret_val := new json_array_t();
+        end if;
+
+        return ret_val;
+    EXCEPTION
+        when others THEN
+            return new json_array_t();        
+    end get_array;
 
     
     member function key_exists( key_str in varchar2 ) return boolean

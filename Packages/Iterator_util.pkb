@@ -17,7 +17,7 @@ as
     begin
       j.put( 'data', l_json_array );
       ret_val.max_i := array_size - 1;
-      
+      ret_val.i     := -1;      
       
       
       ret_val.json_clob := j.to_string();
@@ -50,6 +50,7 @@ as
       
       ret_val.json_clob := j.to_string();
       ret_val.max_i     := array_size - 1;
+      ret_val.i         := -1;
 
       return ret_val;
     end convert_array_of_scalars;
@@ -90,17 +91,18 @@ as
         goto EOF;
       end if;
       
-      l_og_json := json_object_t( h.json_clob );
-      if l_og_json.get_type( key_str ) != 'ARRAY'
-      then
-        log_reason := 'key does not point to an array';
-        goto EOF;
-      end if;
+      -- l_og_json := json_object_t( h.json_clob );
+      -- if l_og_json.get_type( key_str ) != 'ARRAY'
+      -- then
+      --   log_reason := 'key does not point to an array';
+      --   goto EOF;
+      -- end if;
     end assert_input;
     
     <<fetch_and_assert_array>>
     begin
-      l_json_array := l_og_json.get_array( key_str );
+      l_json_array := h.get_array( key_str );
+
       array_size := l_json_array.get_size;
       
       if not array_size >= 1

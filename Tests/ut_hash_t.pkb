@@ -150,7 +150,29 @@ as
         p.put_value( key_str, expected );
         ut.expect( p.get_date( key_str ) ).to_equal(expected);
 
-    end;
+    end test_set_get_date;
+
+  procedure test_array
+  as
+    ja   json_array_t;
+    p    MKLibrary.Hash_t := new MKLibrary.Hash_t();
+    n    int;
+  BEGIN
+    p.json_clob := '{ i:{ var:[ "hello", "world" ] }, bar:[ "alice", "bob", "charlie" ] } ';
+
+    ja := p.get_array( 'bar' );
+    n := ja.get_size;
+    ut.expect(n).to_equal(3);
+
+    ja := p.get_array( 'i.var' );
+    n := ja.get_size;
+    ut.expect(n).to_equal(2);
+
+    ja := p.get_array( 'unknown' );
+    n := ja.get_size;
+    ut.expect(n).to_equal(0);
+
+  end;
 
 
 end ut_hash_t;
