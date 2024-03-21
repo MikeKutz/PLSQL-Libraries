@@ -128,7 +128,7 @@ as
     <<EOF>>
     begin
       -- log.debug( log_reason );
-      dbms_output.put_line( 'Hash2Interate:' ||  log_reason ); -- needs code prefix $$value
+      -- dbms_output.put_line( 'Hash2Interate:' ||  log_reason ); -- needs code prefix $$value
       -- assert return_value
       return return_value;
     end eof;
