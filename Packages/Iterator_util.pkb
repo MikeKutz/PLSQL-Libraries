@@ -14,7 +14,20 @@ as
     as
       j       json_object_t := new json_object_t();
       ret_val MKLibrary.Iterator_t := new MKLibrary.Iterator_t();
+      temp_obj json_object_t;
     begin
+      -- fix
+      for i in 0 .. ( l_json_array.get_size - 1 )
+      loop
+        temp_obj := new json_object_t( l_json_array.get(i) );
+        temp_obj.put( 'commas_first', case when i = 0 then ' ' else ',' end );
+        temp_obj.put( 'is_first', case when i = 0 then true else false end );
+        temp_obj.put( 'commas_last', case when i = (l_json_array.get_size -1 ) then ' ' else ',' end );
+        temp_obj.put( 'is_last', case when i = (l_json_array.get_size -1 ) then true else false end );
+        temp_obj.put( 'index', i + 1 );
+      end loop;
+
+      -- actual work
       j.put( 'data', l_json_array );
       ret_val.max_i := array_size - 1;
       ret_val.i     := -1;      
@@ -42,6 +55,13 @@ as
           v := l_json_array.get_string( i-1 );
   
           lj.put('value', v );
+
+          lj.put( 'commas_first', case when i = 1 then ' ' else ',' end );
+          lj.put( 'is_first', case when i = 1 then true else false end );
+          lj.put( 'commas_last', case when i = array_size then ' ' else ',' end );
+          lj.put( 'is_last', case when i = array_size then true else false end );
+          lj.put( 'index', i );
+
           ja.append( lj );
         end;
       end loop;
