@@ -21,7 +21,7 @@ as
         null | string passes all constraints defined by the domain
         unknown | something went wrong. please file an issue in GitHub
 
-        `column_name` & `string_validate` arrarys must be of the same size.
+        `column_name` and `string_validate` arrarys must be of the same size.
 
         the same column can be mentioned multiple times but should be tested agains a different `domain` for each reference.
 
@@ -185,7 +185,7 @@ BEGIN
         log_debug( 'doms = [' || domain_test || ']');
 
 
-         final_sql :=  q'[select *
+         final_sql :=  q'[select distinct *
 from (
     select distinct column_name, column_value
     from (
@@ -201,7 +201,8 @@ from (
 cross  apply (
 ]' ||
 domain_test || q'[
-)
+) "o"
+where "o".validation_error_text is not null
 ]';
     end;
 

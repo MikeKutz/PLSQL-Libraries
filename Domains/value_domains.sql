@@ -17,7 +17,7 @@ create domain if not exists is_day as date
     ANNOTATIONS ( description 'validates date represents a day');
 
 create domain if not exists is_week as date
-    check ( is_day = trunc(is_day,'day'))
+    check ( is_week = trunc(is_week,'day'))
     ANNOTATIONS ( description 'validates date represents a week');
 
 create domain if not exists is_month as date

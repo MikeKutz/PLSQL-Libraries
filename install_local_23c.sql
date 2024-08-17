@@ -60,7 +60,7 @@ grant execute any procedure,
 
 -- create public synonyms
 prompt Installing Synonyms
-@@./UDTs/synonyms.sql
+--@@./UDTs/synonyms.sql
 
 -- install UT Specs
 prompt Installing UT Packages
